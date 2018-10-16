@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+<head><title>Evento tecla</title>
+ <style>
+   #misil {position:absolute;bottom:10px;left:300px;
+           height:70px;}
+   #ovni { position:absolute;bottom:375px;left:0px;}
+     #ovni2 { position:absolute;bottom:200px;left:500px;}
+   #puntos {position:absolute;bottom:10px;
+            right:30px;width:75px;height:25px;
+            background-color:black;color:white;
+            text-align:center}   
+     #fondo {
+    background-color: black;
+}
+     
+ </style>
+    <script>
+        
+      
+    
+    
+    </script>>
+</head>
+<body id = 'fondo' background= 'space.jpg'>
+<script type="application/javascript">
+  var limiteD = window.innerWidth;
+  var limiteS = window.innerHeight;
+  var avanceh = 3;
+  var avancev = 3;
+  var pid;
+  var puntuacion =0;
+  var posMisil;
+  var posOvni = 0;
+  var finalOvni2 = true;
+  var posOvni2 = 500;
+  var pulsados = 0;
+  var finalOvni = false;
+    
+    
+    window.onload = function(){
+        setInterval(MueveUFO, 10);
+        setInterval(MueveUFO2, 10);
+        document.onkeydown = MueveMisil;
+        
+    }
+    
+     window.onresize = function() {
+        limiteD = window.innerWidth;
+        limiteS = window.innerHeight;
+    }
+
+  function MueveUFO(){
+      var mover1;
+      if(!finalOvni){
+          posOvni = posOvni + avanceh;
+          mover = posOvni + "px";
+          document.getElementById('ovni').style.left = mover;
+          posOvni++;
+          if(posOvni == limiteD - 100){
+              finalOvni = true;
+          }
+      }else{
+          posOvni = posOvni - avanceh;
+          mover = posOvni + "px";
+          document.getElementById('ovni').style.left = mover;
+          posOvni--;
+          if(posOvni == 0 ){
+              finalOvni = false;
+          }
+      }
+      
+    } // de la función MueveUFO
+    function MueveUFO2(){
+        
+        var mover2;
+      if(!finalOvni2){
+          posOvni2 = posOvni2 + avanceh;
+          mover2 = posOvni2 + "px";
+          document.getElementById('ovni2').style.left = mover2;
+          posOvni2++;
+          if(posOvni2 == limiteD - 100){
+              finalOvni2 = true;
+          }
+      }else{
+          posOvni2 = posOvni2 - avanceh;
+          mover2 = posOvni2 + "px";
+          document.getElementById('ovni2').style.left = mover2;
+          posOvni2--;
+          if(posOvni2 == 0 ){
+              finalOvni2 = false;
+          }
+      }
+    }
+
+  function Dispara(){
+      
+      var posMisilAltura = parseInt(document.getElementById('misil').style.bottom);
+      posMisilAltura = posMisilAltura + avanceh + 10;
+      document.getElementById('misil').style.bottom = posMisilAltura + "px";
+     
+      var misil = document.getElementById('misil').getBoundingClientRect();
+      var ovni = document.getElementById('ovni').getBoundingClientRect();
+      var otro = document.getElementById('ovni2').getBoundingClientRect();
+      var misil2 = {altura: parseInt(document.getElementById('misil').style.height) ,anchura: parseInt(document.getElementById('misil').style.width)};
+      var ovni2 = {altura: parseInt(document.getElementById('ovni').style.height) ,anchura: parseInt(document.getElementById('ovni').style.width)};
+      var otro2 = {altura: parseInt(document.getElementById('ovni2').style.height) ,anchura: parseInt(document.getElementById('ovni2').style.width)};
+      
+       if(posMisilAltura == 920){ 
+          document.getElementById('misil').style.bottom = "10px";
+           clearInterval(pid);
+           pulsados = 0;
+      }
+      
+
+      if(misil.left < ovni.left + ovni2.anchura && misil.left + misil2.anchura > ovni.left && misil.top < ovni.top + ovni2.altura && misil.top + misil2.altura > ovni.top||misil.left < otro.left + otro2.anchura && misil.left + misil2.anchura > otro.left && misil.top < otro.top + otro2.altura && misil.top + misil2.altura > otro.top){
+          puntuacion = puntuacion + 100; 
+          document.getElementById('puntos').innerHTML = puntuacion;
+          document.getElementById('misil').style = "left:300px;bottom:10px;width:100px;height:100px";
+          alert('HAS GANADO');
+          document.getElementById('ovni').src = "boom.gif";
+          document.getElementById('ovni2').src = "boom.gif";
+          window.setTimeout(cargarImagenes, 2000);
+          clearInterval(pid);
+          pulsados = 0;
+      }   
+  }   // de Dispara 
+    
+    function cargarImagenes (){
+        
+        document.getElementById('ovni').src = 'ovni.png';
+        document.getElementById('ovni2').src = 'ovni.png';
+    
+    }
+
+  function MueveMisil (ElEvento){
+      
+      var posMisil = parseInt(document.getElementById('misil').style.left);
+      var tecla = ElEvento || window.event;
+      if(tecla.keyCode == 37 && posMisil > 0){
+          posMisil = posMisil - avanceh - 25;
+          document.getElementById('misil').style.left = posMisil + "px";
+      }
+      if(tecla.keyCode == 39 && posMisil < limiteD){
+          posMisil = posMisil + avanceh + 25;
+          document.getElementById('misil').style.left = posMisil + "px";
+      }
+      if(tecla.keyCode == 32 && pulsados <1){
+          
+          pid=setInterval(Dispara, 50);
+          pulsados = 1;
+      }
+      
+   } // dela funcion MueveMisil
+    function CalcularChoque(){
+        
+        
+    }
+
+</script>
+  
+<img id ='misil' src='misil.png' STYLE="left:300px;bottom:10px;width:100px;height:100px" alt='misil'/>
+<img id ='ovni' src="ovni.png" STYLE="left:0px;bottom:550px;width:100px;height:100px" alt='ovni'/>
+<img id ='ovni2' src = "ovni.png" STYLE="left:500px;bottom:350px;width:100px;height:100px" alt='ovni2'/>
+<div id ='puntos'>0</div>           
+
+</body>
+</html>
